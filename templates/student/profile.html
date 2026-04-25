@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h3 class="card-title mb-4">My Profile</h3>
+                <form method="POST" action="{{ url_for('student_profile') }}" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" name="full_name" class="form-control" value="{{ current_user.student_profile.full_name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Degree</label>
+                        <input type="text" name="degree" class="form-control" value="{{ current_user.student_profile.degree }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Upload Resume (PDF, DOC, DOCX)</label>
+                        {% if current_user.student_profile.resume_url %}
+                            <div class="mb-2">
+                                <a href="{{ url_for('uploaded_file', filename=current_user.student_profile.resume_url) }}" target="_blank">View Current Resume</a>
+                            </div>
+                        {% endif %}
+                        <input type="file" name="resume" class="form-control" accept=".pdf,.doc,.docx">
+                        <small class="text-muted">Leave empty to keep the current resume.</small>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100">Update Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

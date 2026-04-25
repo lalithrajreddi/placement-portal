@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-2 align-items-center">
+    <div class="col-md-6">
+        <h2>Student Dashboard</h2>
+        <p class="text-muted mb-0">Current Approved Placement Drives</p>
+    </div>
+    <div class="col-md-6 mt-3 mt-md-0">
+        <form action="{{ url_for('student_dashboard') }}" method="GET" class="d-flex justify-content-md-end">
+            <div class="input-group" style="max-width: 300px;">
+                <input type="text" name="search" class="form-control" placeholder="Search title or company..." value="{{ search_query }}">
+                <button class="btn btn-outline-primary" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row text-center mb-4">
+    <div class="col-4">
+        <div class="card card-stats h-100 py-3">
+            <div class="stat-val text-primary" style="font-size:2rem">{{ total_available_drives }}</div>
+            <div class="stat-label" style="font-size:1rem">Available</div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="card card-stats h-100 py-3">
+            <div class="stat-val text-info" style="font-size:2rem">{{ total_applied }}</div>
+            <div class="stat-label" style="font-size:1rem">Applied</div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="card card-stats h-100 py-3">
+            <div class="stat-val text-success" style="font-size:2rem">{{ shortlisted }}</div>
+            <div class="stat-label" style="font-size:1rem">Shortlisted</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    {% for drive in drives %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">{{ drive.job_title }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ drive.company.company_name }}</h6>
+                <p class="card-text text-truncate">{{ drive.job_description }}</p>
+                <div class="mb-2">
+                    <small><strong>Deadline:</strong> {{ drive.application_deadline.strftime('%Y-%m-%d %H:%M') }}</small>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-top-0 pb-3">
+                {% if drive.id in applied_drives %}
+                    <button class="btn btn-secondary w-100" disabled>Applied</button>
+                {% else %}
+                    <form action="{{ url_for('student_apply', id=drive.id) }}" method="POST">
+                        <button type="submit" class="btn btn-primary w-100">Apply Now</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12 text-center py-5">
+        <p class="text-muted">No approved placement drives available at the moment.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

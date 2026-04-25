@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mb-4">
+    <h2>Manage Placement Drives</h2>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Company Name</th>
+                    <th>Job Title</th>
+                    <th>Deadline</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for drive in drives %}
+                <tr>
+                    <td>{{ drive.id }}</td>
+                    <td>{{ drive.company.company_name }}</td>
+                    <td>{{ drive.job_title }}</td>
+                    <td>{{ drive.application_deadline.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>
+                        {% if drive.status == 'Pending' %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        {% elif drive.status == 'Approved' %}
+                            <span class="badge bg-success">Approved</span>
+                        {% elif drive.status == 'Closed' %}
+                            <span class="badge bg-secondary">Closed</span>
+                        {% else %}
+                            <span class="badge bg-danger">{{ drive.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex gap-2">
+                        {% if drive.status == 'Pending' %}
+                            <form action="{{ url_for('admin_drive_action', id=drive.id, action='approve') }}" method="POST">
+                                <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                            </form>
+                            <form action="{{ url_for('admin_drive_action', id=drive.id, action='reject') }}" method="POST">
+                                <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                            </form>
+                        {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6" class="text-center py-4">No drives found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <h2>Admin Dashboard</h2>
+        <p class="text-muted">Overview of the Placement Portal</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card card-stats mb-4">
+            <div class="card-body text-center">
+                <h5 class="card-title text-muted">Students</h5>
+                <div class="stat-val">{{ num_students }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-stats mb-4">
+            <div class="card-body text-center">
+                <h5 class="card-title text-muted">Companies</h5>
+                <div class="stat-val">{{ num_companies }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-stats mb-4">
+            <div class="card-body text-center">
+                <h5 class="card-title text-muted">Placement Drives</h5>
+                <div class="stat-val">{{ num_drives }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-stats mb-4">
+            <div class="card-body text-center">
+                <h5 class="card-title text-muted">Total Applications</h5>
+                <div class="stat-val">{{ num_applications }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-8 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h5 class="card-title fw-bold mb-4">System Overview</h5>
+                <canvas id="adminChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100" style="background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%); color: white;">
+            <div class="card-body">
+                <h5 class="card-title text-white fw-bold mb-4">Quick Actions</h5>
+                <div class="d-grid gap-3">
+                    <a href="{{ url_for('admin_companies') }}" class="btn btn-light text-primary text-start fw-semibold py-3 shadow-sm" style="transition: transform 0.2s; border-radius: 12px;">
+                        🏢 Review Pending Companies &rarr;
+                    </a>
+                    <a href="{{ url_for('admin_drives') }}" class="btn btn-light text-primary text-start fw-semibold py-3 shadow-sm" style="transition: transform 0.2s; border-radius: 12px;">
+                        🚀 Manage Placement Drives &rarr;
+                    </a>
+                    <a href="{{ url_for('admin_students') }}" class="btn btn-light text-primary text-start fw-semibold py-3 shadow-sm" style="transition: transform 0.2s; border-radius: 12px;">
+                        👨‍🎓 Search Student Directory &rarr;
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Wrap Jinja variables in strings to prevent IDE JS diagnostics errors
+    const dataMetrics = [
+        Number("{{ num_students }}"), 
+        Number("{{ num_companies }}"), 
+        Number("{{ num_drives }}"), 
+        Number("{{ num_applications }}")
+    ];
+    
+    const ctx = document.getElementById('adminChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Students', 'Companies', 'Drives', 'Applications'],
+            datasets: [{
+                label: 'System Metrics',
+                data: dataMetrics,
+                backgroundColor: [
+                    'rgba(79, 70, 229, 0.7)',
+                    'rgba(236, 72, 153, 0.7)',
+                    'rgba(16, 185, 129, 0.7)',
+                    'rgba(245, 158, 11, 0.7)'
+                ],
+                borderColor: [
+                    'rgba(79, 70, 229, 1)',
+                    'rgba(236, 72, 153, 1)',
+                    'rgba(16, 185, 129, 1)',
+                    'rgba(245, 158, 11, 1)'
+                ],
+                borderWidth: 1,
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: { backgroundColor: 'rgba(0,0,0,0.8)', padding: 12 }
+            },
+            scales: {
+                y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+
+    // Add hover effect to new modern buttons manually
+    document.querySelectorAll('.btn-light').forEach(btn => {
+        btn.addEventListener('mouseenter', () => btn.style.transform = 'translateY(-3px)');
+        btn.addEventListener('mouseleave', () => btn.style.transform = 'translateY(0)');
+    });
+});
+</script>
+{% endblock %}

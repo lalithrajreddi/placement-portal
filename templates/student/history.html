@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mb-4">
+    <h2>My Application History</h2>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Company</th>
+                    <th>Job Title</th>
+                    <th>Applied On</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for app in applications %}
+                <tr>
+                    <td>{{ app.drive.company.company_name }}</td>
+                    <td>{{ app.drive.job_title }}</td>
+                    <td>{{ app.application_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>
+                        <div class="d-flex flex-column gap-2 mb-2">
+                            <span class="badge 
+                                {% if app.status == 'Applied' %}bg-secondary
+                                {% elif app.status == 'Shortlisted' %}bg-info
+                                {% elif app.status == 'Selected' %}bg-success
+                                {% elif app.status == 'Rejected' %}bg-danger
+                                {% endif %}">
+                                {{ app.status }}
+                            </span>
+                        </div>
+                        {% if app.status_history|length > 0 %}
+                            <small class="text-muted d-block mt-2"><strong>History:</strong></small>
+                            <ul class="list-unstyled mb-0 small">
+                                {% for hist in app.status_history %}
+                                <li>- {{ hist.status }} on {{ hist.changed_at.strftime('%Y-%m-%d %H:%M') }} by {{ hist.changed_by }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" class="text-center py-4">You haven't applied to any drives yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

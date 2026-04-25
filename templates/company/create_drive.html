@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h3 class="card-title mb-4">Create Placement Drive</h3>
+                <form method="POST" action="{{ url_for('company_create_drive') }}">
+                    <div class="mb-3">
+                        <label class="form-label">Job Title</label>
+                        <input type="text" name="job_title" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Job Description</label>
+                        <textarea name="job_description" class="form-control" rows="4" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Eligibility Criteria</label>
+                        <textarea name="eligibility_criteria" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Application Deadline</label>
+                        <input type="datetime-local" name="application_deadline" class="form-control" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100">Submit for Approval</button>
+                    <div class="mt-3 text-center">
+                        <a href="{{ url_for('company_dashboard') }}" class="btn btn-link">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
